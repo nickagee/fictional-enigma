@@ -14,10 +14,13 @@ jobs:
       - checkout
       - run:
           name: install updates
-          command: 
-            apt-get update
-            apt-get upgrade 
-            apt-get install ffmpeg libsm6 libxext6
+          command: apt-get update 
+      - run:
+          name: instate upgrades
+          command: apt-get upgrade 
+      - run: 
+          name: install dependencies
+          command: apt-get install ffmpeg libsm6 libxext6
       - run:
           name: install python requirments
           command: pip install -r backend/requirements.txt
