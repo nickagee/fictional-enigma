@@ -93,3 +93,6 @@ target/
 
 # Model files 
 *.t7
+
+# Output images from testing
+*.jpg

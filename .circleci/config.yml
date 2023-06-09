@@ -25,8 +25,9 @@ jobs:
           name: install python requirments
           command: pip install -r backend/requirements.txt
       - run:
-          name: Run PIP
-          command: pip --version
+          name: run api
+          command: python backend/main.py
+      - run
   # test:
   #   <<: *image
   #   steps:
