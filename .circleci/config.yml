@@ -27,7 +27,9 @@ jobs:
       - run:
           name: run api
           command: python backend/main.py
-      - run
+      - run:
+          name: check api
+          command: curl 0.0.0.0:8080/
   # test:
   #   <<: *image
   #   steps:
