@@ -1,15 +1,15 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
-
-# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
-# See: https://circleci.com/docs/orb-intro/
-default: &image
+python: &python
   docker:
     - image: cimg/python:3.10.11
+aws-cli: &awscli
+  docker:
+    - image: cimg/aws:2023.06
 jobs:
   build:
-    <<: *image
+    <<: *python
     steps:
       - checkout
       - run:
@@ -24,12 +24,13 @@ jobs:
       - run:
           name: install python requirments
           command: pip install -r backend/requirements.txt
+  create_infrastructure:
+    <<: *awscli
+    steps:
+      - checkout
       - run:
-          name: run api
-          command: python backend/main.py
-      - run:
-          name: check api
-          command: curl 0.0.0.0:8080/
+          name: Create Cloudformation Stack 
+          command: aws cloudformation deploy --template-file cf./template.yml --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} --region us-east-1
   # test:
   #   <<: *image
   #   steps:
@@ -45,6 +46,7 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build
+      - create_infrastructure
       # - test:
       #     requires:
       #       - build

@@ -44,14 +44,12 @@ async def generate_remaining_models(models, image, name: str):
         executor, partial(process_image, models, image, name)
     )
 
-
 def process_image(models, image, name: str):
     for model in models:
         output, resized = inference.inference(models[model], image)
         name = name.split(".")[0]
         name = f"{name.split('_')[0]}_{models[model]}.jpg"
         cv2.imwrite(name, output)
-
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8080)
