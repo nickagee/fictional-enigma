@@ -11,26 +11,27 @@ jobs:
   build:
     <<: *image
     steps:
-      # - checkout
-      # - python/install-packages:
-      #     pkg-manager: pip
-          # app-dir: ~/project/package-directory/  # If your requirements.txt isn't in the root directory.
-          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
+      - checkout
       - run:
-          name: Run tests
-          # This assumes pytest is installed via the install-package step above
-          command: python --version
+          name: install updates
+          command: 
+            apt-get update
+            apt-get upgrade 
+            apt-get install ffmpeg libsm6 libxext6
+      - run:
+          name: install python requirments
+          command: pip install -r backend/requirements.txt
       - run:
           name: Run PIP
           command: pip --version
-  test:
-    <<: *image
-    steps:
-      - run: exit 0
-  analyze:
-    <<: *image
-    steps:
-      - run: exit 0
+  # test:
+  #   <<: *image
+  #   steps:
+  #     - run: exit 0
+  # analyze:
+  #   <<: *image
+  #   steps:
+  #     - run: exit 0
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
@@ -38,9 +39,9 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build
-      - test:
-          requires:
-            - build
-      - analyze:
-          requires:
-            - test
+      # - test:
+      #     requires:
+      #       - build
+      # - analyze:
+      #     requires:
+      #       - test
